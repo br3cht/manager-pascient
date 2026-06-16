@@ -1,0 +1,83 @@
+volumes:
+ db:
+ cache:
+
+services:
+  nginx:
+    container_name: laravel-system-nginx
+    image: nginx:alpine
+    restart: unless-stopped
+    mem_limit: 200M # It can be removed if there is no need memory limit
+    ports:
+        - "8080:80"
+    volumes:
+        - ./:/var/www
+        - ./infra/http/default.d/:/etc/nginx/conf.d/
+    networks:
+    - laravel
+
+  app:
+    container_name: laravel-system-api
+    build:
+        context: ./Dockerfiles/laravel/
+        dockerfile: Dockerfile
+        args:
+            user: ${DOCKER_USER_ID:-0}
+            uid: ${DOCKER_GROUP_ID:-0}
+    image: system-laravel-10
+    restart: unless-stopped
+    working_dir: /var/www
+    mem_limit: 400M # It can be removed if there is no need memory limit
+    depends_on:
+    - db
+    volumes:
+    - .:/var/www
+    networks:
+    - laravel
+
+  # queue:
+  #     container_name: queue-system-api
+  #     image: system-laravel-10
+  #     restart: unless-stopped
+  #     working_dir: /var/www/html/
+  #     command: ['sh', '-c', 'composer install && php artisan migrate && php artisan db:seed && npm run build && php artisan horizon']
+  #     mem_limit: 400M # It can be removed if there is no need memory limit
+  #     depends_on:
+  #       - app
+  #       - db
+  #     volumes:
+  #       - .:/var/www/html
+  #     networks:
+  #       - laravel
+
+  db:
+    image: mysql:8.0
+    container_name: laravel-system-db
+    restart: unless-stopped
+    mem_limit: 700M
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+    - db:/var/lib/mysql
+    networks:
+      - laravel
+
+
+  cache:
+    container_name: laravel-system-redis
+    image: redis:latest
+    mem_limit: 400M # It can be removed if there is no need memory limit
+    restart: unless-stopped
+    ports:
+        - "${REDIS_PORT}:6379"
+    networks:
+        - laravel
+
+networks:
+    laravel:
+        driver: bridge
