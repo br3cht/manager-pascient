@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('cpf', 11);
-            $table->string('cns', 15);
+            $table->string('cpf', 11)->unique();
+            $table->string('cns', 15)->unique();
             $table->date('birth_date');
             $table->enum('gender', ['M', 'F', 'O']);
-            $table->string('phone', 11);
+            $table->string('phone', 11)->nullable();
             $table->foreignId('address_id')->constrained('addresses');
             $table->timestamps();
         });
