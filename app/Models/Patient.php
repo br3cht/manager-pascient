@@ -11,7 +11,7 @@ class Patient extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    public function Address()
+    public function address()
     {
         return $this->belongsTo(Address::class);
     }

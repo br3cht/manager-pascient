@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PatientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,7 @@ Route::middleware([
 ])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::resources([
-        'addresses' => AddressController::class
+        'addresses' => AddressController::class,
+        'patients' => PatientController::class
     ]);
 });
