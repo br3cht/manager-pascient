@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\DTO\Address\AddressIndexInput;
+use App\DTO\Address\AddressInput;
+use App\Http\Requests\Address\AddressIndexRequest;
+use App\Http\Requests\Address\AddressStoreRequest;
+use App\Http\Resources\AddressResource;
+use App\Services\AddressService;
+
+class AddressController extends Controller
+{
+    public function __construct(
+        public readonly AddressService $addressService
+    ) {}
+
+    public function index(AddressIndexRequest $request)
+    {
+        $dataRequest = $request->validated();
+        $input = AddressIndexInput::fromArray($dataRequest);
+
+        return AddressResource::collection(
+            $this->addressService->index($input)
+        );
+    }
+
+    public function store(AddressStoreRequest $request)
+    {
+        $dataRequest = $request->validated();
+        $input = AddressInput::fromArray($dataRequest);
+        $this->addressService->store($input);
+
+        return response()->json(data: ['message' => 'Endereco cadastrado com sucesso']);
+    }
+}
