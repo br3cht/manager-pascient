@@ -9,7 +9,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PatientUpdateRequest extends FormRequest
 {
-    use HasPortugueseValidationMessages;
+    use HasPortugueseValidationMessages {
+        messages as portugueseValidationMessages;
+    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -53,5 +55,17 @@ class PatientUpdateRequest extends FormRequest
             'phone' => 'telefone',
             'address_id' => 'endereço',
         ];
+    }
+
+    /**
+     * Get custom validation messages in Portuguese.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return array_merge($this->portugueseValidationMessages(), [
+            'phone.digits' => 'O campo telefone deve conter 11 dígitos, incluindo o DDD.',
+        ]);
     }
 }
