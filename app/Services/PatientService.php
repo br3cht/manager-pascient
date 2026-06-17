@@ -23,6 +23,7 @@ class PatientService
     public function store(PatientInput $input)
     {
         $this->cpfIsStored($input->cpf);
+        $this->cnsIsStored($input->cns);
 
         $patient = $this->patientRepository->store($input);
 
@@ -32,6 +33,7 @@ class PatientService
     public function update(PatientInput $input, Patient $patient): void
     {
         $this->cpfIsStored($input->cpf, $patient->id);
+        $this->cnsIsStored($input->cns, $patient->id);
 
         $this->patientRepository->update($input, $patient);
 
@@ -52,6 +54,17 @@ class PatientService
         if ($this->patientRepository->cpfIsStored($cpf, $ignorePatientId)) {
             throw ValidationException::withMessages([
                 'cpf' => ['Este CPF já está cadastrado.'],
+            ]);
+        }
+
+        return false;
+    }
+
+    public function cnsIsStored(string $cns, ?int $ignorePatientId = null): bool
+    {
+        if ($this->patientRepository->cnsIsStored($cns, $ignorePatientId)) {
+            throw ValidationException::withMessages([
+                'cns' => ['Este CNS já está cadastrado.'],
             ]);
         }
 

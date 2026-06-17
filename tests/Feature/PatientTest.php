@@ -172,6 +172,30 @@ class PatientTest extends TestCase
             ->assertJsonPath('errors.cpf.0', 'Este CPF já está cadastrado.');
     }
 
+    public function test_authenticated_user_cannot_store_patient_with_duplicate_cns(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+        $address = Address::factory()->create();
+
+        Patient::factory()->create([
+            'cns' => '111111111111111',
+        ]);
+
+        $response = $this->postJson('/api/patients', [
+            'name' => 'Ana Silva',
+            'cpf' => '52998224725',
+            'cns' => '111111111111111',
+            'birth_date' => '1990-01-10',
+            'gender' => 'F',
+            'phone' => '11999999999',
+            'address_id' => $address->id,
+        ]);
+
+        $response
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.cns.0', 'Este CNS já está cadastrado.');
+    }
+
     public function test_authenticated_user_can_update_patient_with_daily_log(): void
     {
         Sanctum::actingAs(User::factory()->create());
@@ -211,6 +235,35 @@ class PatientTest extends TestCase
             'cpf' => '52998224725',
             'address_id' => $address->id,
         ]);
+    }
+
+    public function test_authenticated_user_cannot_update_patient_with_cns_from_another_patient(): void
+    {
+        Sanctum::actingAs(User::factory()->create());
+        $address = Address::factory()->create();
+        $patient = Patient::factory()->create([
+            'cpf' => '52998224725',
+            'cns' => '111111111111111',
+        ]);
+
+        Patient::factory()->create([
+            'cpf' => '11144477735',
+            'cns' => '222222222222222',
+        ]);
+
+        $response = $this->putJson("/api/patients/{$patient->id}", [
+            'name' => 'Ana Atualizada',
+            'cpf' => '52998224725',
+            'cns' => '222222222222222',
+            'birth_date' => '1991-02-20',
+            'gender' => 'F',
+            'phone' => '11888888888',
+            'address_id' => $address->id,
+        ]);
+
+        $response
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.cns.0', 'Este CNS já está cadastrado.');
     }
 
     public function test_authenticated_user_can_delete_patient_with_daily_log(): void

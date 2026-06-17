@@ -56,4 +56,14 @@ class PatientRepository
             })
             ->exists();
     }
+
+    public function cnsIsStored(string $cns, ?int $ignorePatientId = null): bool
+    {
+        return Patient::query()
+            ->where('cns', $cns)
+            ->when($ignorePatientId, function ($query) use ($ignorePatientId) {
+                $query->whereKeyNot($ignorePatientId);
+            })
+            ->exists();
+    }
 }
