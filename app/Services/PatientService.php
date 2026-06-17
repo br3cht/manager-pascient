@@ -27,7 +27,15 @@ class PatientService
 
         $patient = $this->patientRepository->store($input);
 
-        Log::channel('daily')->info('Paciente '.$patient->name.' Adicionado com Sucesso');
+        Log::channel('daily')->info('Paciente criado com sucesso', [
+            'action' => 'created',
+            'entity' => 'patient',
+            'entity_id' => $patient->id,
+            'name' => $patient->name,
+            'cpf' => $patient->cpf,
+            'cns' => $patient->cns,
+            'address_id' => $patient->address_id,
+        ]);
     }
 
     public function update(PatientInput $input, Patient $patient): void
@@ -37,7 +45,12 @@ class PatientService
 
         $this->patientRepository->update($input, $patient);
 
-        Log::channel('daily')->info('Paciente '.$patient->id.' Atualizado com Sucesso');
+        Log::channel('daily')->info('Paciente atualizado com sucesso', [
+            'action' => 'updated',
+            'entity' => 'patient',
+            'entity_id' => $patient->id,
+            'changes' => $input->toArray(),
+        ]);
     }
 
     public function delete(Patient $patient): void
@@ -46,7 +59,11 @@ class PatientService
 
         $this->patientRepository->delete($patient);
 
-        Log::channel('daily')->info('Paciente '.$patientId.' deletado com Sucesso');
+        Log::channel('daily')->info('Paciente deletado com sucesso', [
+            'action' => 'deleted',
+            'entity' => 'patient',
+            'entity_id' => $patientId,
+        ]);
     }
 
     public function cpfIsStored(string $cpf, ?int $ignorePatientId = null): bool

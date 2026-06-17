@@ -25,14 +25,27 @@ class AddressService
     {
         $address = $this->addressRepository->store($input);
 
-        Log::channel('daily')->info('Endereco '.$address->street.' Adicionado com Sucesso');
+        Log::channel('daily')->info('Endereco criado com sucesso', [
+            'action' => 'created',
+            'entity' => 'address',
+            'entity_id' => $address->id,
+            'street' => $address->street,
+            'zip_code' => $address->zip_code,
+            'city' => $address->city,
+            'state' => $address->state,
+        ]);
     }
 
     public function update(AddressInput $input, Address $address): void
     {
         $this->addressRepository->update($input, $address);
 
-        Log::channel('daily')->info('Endereco '.$address->id.' Atualizado com Sucesso');
+        Log::channel('daily')->info('Endereco atualizado com sucesso', [
+            'action' => 'updated',
+            'entity' => 'address',
+            'entity_id' => $address->id,
+            'changes' => $input->toArray(),
+        ]);
     }
 
     public function delete(Address $address): void
@@ -47,6 +60,10 @@ class AddressService
 
         $this->addressRepository->delete($address);
 
-        Log::channel('daily')->info('Endereco '.$addressId.' deletado com Sucesso');
+        Log::channel('daily')->info('Endereco deletado com sucesso', [
+            'action' => 'deleted',
+            'entity' => 'address',
+            'entity_id' => $addressId,
+        ]);
     }
 }

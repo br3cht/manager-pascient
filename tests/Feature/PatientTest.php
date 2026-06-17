@@ -100,7 +100,15 @@ class PatientTest extends TestCase
         $logger
             ->shouldReceive('info')
             ->once()
-            ->with('Paciente Ana Silva Adicionado com Sucesso');
+            ->with('Paciente criado com sucesso', Mockery::on(function (array $context) use ($address): bool {
+                return $context['action'] === 'created'
+                    && $context['entity'] === 'patient'
+                    && is_int($context['entity_id'])
+                    && $context['name'] === 'Ana Silva'
+                    && $context['cpf'] === '52998224725'
+                    && $context['cns'] === '111111111111111'
+                    && $context['address_id'] === $address->id;
+            }));
 
         $response = $this->postJson('/api/patients', [
             'name' => 'Ana Silva',
@@ -144,7 +152,7 @@ class PatientTest extends TestCase
             ->assertJsonPath('errors.cns.0', 'O campo CNS deve conter exatamente 15 dígitos.')
             ->assertJsonPath('errors.birth_date.0', 'O campo data de nascimento deve ser uma data válida.')
             ->assertJsonPath('errors.gender.0', 'O campo gênero selecionado é inválido.')
-            ->assertJsonPath('errors.phone.0', 'O campo telefone deve conter exatamente 11 dígitos.')
+            ->assertJsonPath('errors.phone.0', 'O campo telefone deve conter 11 dígitos, incluindo o DDD.')
             ->assertJsonPath('errors.address_id.0', 'O campo endereço selecionado é inválido.');
     }
 
@@ -213,7 +221,20 @@ class PatientTest extends TestCase
         $logger
             ->shouldReceive('info')
             ->once()
-            ->with('Paciente '.$patient->id.' Atualizado com Sucesso');
+            ->with('Paciente atualizado com sucesso', [
+                'action' => 'updated',
+                'entity' => 'patient',
+                'entity_id' => $patient->id,
+                'changes' => [
+                    'name' => 'Ana Atualizada',
+                    'cpf' => '52998224725',
+                    'cns' => '333333333333333',
+                    'birth_date' => '1991-02-20',
+                    'gender' => 'F',
+                    'phone' => '11888888888',
+                    'address_id' => $address->id,
+                ],
+            ]);
 
         $response = $this->putJson("/api/patients/{$patient->id}", [
             'name' => 'Ana Atualizada',
@@ -280,7 +301,11 @@ class PatientTest extends TestCase
         $logger
             ->shouldReceive('info')
             ->once()
-            ->with('Paciente '.$patient->id.' deletado com Sucesso');
+            ->with('Paciente deletado com sucesso', [
+                'action' => 'deleted',
+                'entity' => 'patient',
+                'entity_id' => $patient->id,
+            ]);
 
         $response = $this->deleteJson("/api/patients/{$patient->id}");
 

@@ -109,7 +109,15 @@ class AddressTest extends TestCase
         $logger
             ->shouldReceive('info')
             ->once()
-            ->with('Endereco Rua Nova Adicionado com Sucesso');
+            ->with('Endereco criado com sucesso', Mockery::on(function (array $context): bool {
+                return $context['action'] === 'created'
+                    && $context['entity'] === 'address'
+                    && is_int($context['entity_id'])
+                    && $context['street'] === 'Rua Nova'
+                    && $context['zip_code'] === '12345678'
+                    && $context['city'] === 'Santos'
+                    && $context['state'] === 'SP';
+            }));
 
         $response = $this->postJson('/api/addresses', [
             'street' => 'Rua Nova',
@@ -165,7 +173,18 @@ class AddressTest extends TestCase
         $logger
             ->shouldReceive('info')
             ->once()
-            ->with('Endereco '.$address->id.' Atualizado com Sucesso');
+            ->with('Endereco atualizado com sucesso', [
+                'action' => 'updated',
+                'entity' => 'address',
+                'entity_id' => $address->id,
+                'changes' => [
+                    'street' => 'Rua Atualizada',
+                    'zip_code' => '87654321',
+                    'neighborhood' => 'Boqueirao',
+                    'city' => 'Praia Grande',
+                    'state' => 'SP',
+                ],
+            ]);
 
         $response = $this->putJson("/api/addresses/{$address->id}", [
             'street' => 'Rua Atualizada',
@@ -200,7 +219,11 @@ class AddressTest extends TestCase
         $logger
             ->shouldReceive('info')
             ->once()
-            ->with('Endereco '.$address->id.' deletado com Sucesso');
+            ->with('Endereco deletado com sucesso', [
+                'action' => 'deleted',
+                'entity' => 'address',
+                'entity_id' => $address->id,
+            ]);
 
         $response = $this->deleteJson("/api/addresses/{$address->id}");
 
