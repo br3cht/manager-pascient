@@ -44,7 +44,10 @@ class AuthTest extends TestCase
 
         $response
             ->assertUnprocessable()
-            ->assertJsonValidationErrors(['email', 'password', 'device']);
+            ->assertJsonValidationErrors(['email', 'password', 'device'])
+            ->assertJsonPath('errors.email.0', 'O campo e-mail deve ser um e-mail válido.')
+            ->assertJsonPath('errors.password.0', 'O campo senha é obrigatório.')
+            ->assertJsonPath('errors.device.0', 'O campo dispositivo é obrigatório.');
     }
 
     public function test_user_cannot_login_with_invalid_credentials(): void

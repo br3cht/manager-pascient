@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Concerns\HasPortugueseValidationMessages;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AuthRequest extends FormRequest
 {
+    use HasPortugueseValidationMessages;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -26,6 +29,20 @@ class AuthRequest extends FormRequest
             'email' => 'required|email',
             'password' => 'required|string',
             'device' => 'required|string',
+        ];
+    }
+
+    /**
+     * Get custom attribute names.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'email' => 'e-mail',
+            'password' => 'senha',
+            'device' => 'dispositivo',
         ];
     }
 }

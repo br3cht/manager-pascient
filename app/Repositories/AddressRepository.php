@@ -6,7 +6,6 @@ use App\DTO\Address\AddressIndexInput;
 use App\DTO\Address\AddressInput;
 use App\Models\Address;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Log;
 
 class AddressRepository
 {
@@ -33,24 +32,18 @@ class AddressRepository
             );
     }
 
-    public function store(AddressInput $input)
+    public function store(AddressInput $input): Address
     {
-        $adress = Address::create($input->toArray());
-
-        Log::info('Endereco '.$adress->street.' Adicionado com Sucesso');
+        return Address::create($input->toArray());
     }
 
     public function update(AddressInput $input, Address $address)
     {
         $address->update($input->toArray());
-
-        Log::info('Endereco '.$address->id.' Atualizado com Sucesso');
     }
 
     public function delete(Address $address)
     {
         $address->delete();
-
-        Log::info('Endereco '.$address->id.' deletado com Sucesso');
     }
 }

@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests\Address;
 
+use App\Http\Requests\Concerns\HasPortugueseValidationMessages;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AddressStoreRequest extends FormRequest
 {
+    use HasPortugueseValidationMessages;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -28,6 +31,22 @@ class AddressStoreRequest extends FormRequest
             'neighborhood' => 'required|string',
             'city' => 'required|string',
             'state' => 'required|string|max:2',
+        ];
+    }
+
+    /**
+     * Get custom attribute names.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'street' => 'logradouro',
+            'zip_code' => 'CEP',
+            'neighborhood' => 'bairro',
+            'city' => 'cidade',
+            'state' => 'estado',
         ];
     }
 }
