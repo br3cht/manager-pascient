@@ -156,13 +156,17 @@ export default {
     watch: {
         addressSearch(value) {
             clearTimeout(this.addressSearchTimer);
+
+            if (!value || !value.trim()) return;
+            if (this.form.address_id) return;
+
             this.addressSearchTimer = setTimeout(() => {
                 this.addresses.fetch({
                     page: 1,
                     per_page: 20,
                     sort_by: 'city',
                     sort_dir: 'asc',
-                    search: value || undefined,
+                    search: value.trim(),
                 });
             }, 400);
         },

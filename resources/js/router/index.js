@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import { useAuthStore } from '../store/auth';
+import pinia from '../plugins/pinia';
 import AppLayout from '../components/AppLayout.vue';
 import Login from '../views/Login.vue';
 import Dashboard from '../views/Dashboard.vue';
@@ -36,7 +37,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-    const auth = useAuthStore();
+    const auth = useAuthStore(pinia);
 
     if (to.matched.some((route) => route.meta.requiresAuth) && !auth.isAuthenticated) {
         next({ name: 'login', query: { redirect: to.fullPath } });
