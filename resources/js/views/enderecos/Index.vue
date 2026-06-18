@@ -71,8 +71,6 @@
 import BaseTable from '../../components/BaseTable.vue';
 import Pagination from '../../components/Pagination.vue';
 import ConfirmModal from '../../components/ConfirmModal.vue';
-import { useAddressesStore } from '../../store/addresses';
-import { useFeedbackStore } from '../../store/feedback';
 import { BRAZILIAN_STATES } from '../../constants/states';
 
 export default {
@@ -112,11 +110,7 @@ export default {
 
     computed: {
         store() {
-            return useAddressesStore();
-        },
-
-        feedback() {
-            return useFeedbackStore();
+            return this.$store.state.addresses;
         },
     },
 
@@ -153,7 +147,7 @@ export default {
         },
 
         fetch() {
-            this.store.fetch({ ...this.query, search: this.filters.search || undefined, state: this.filters.state || undefined });
+            this.$store.dispatch('addresses/fetch', { ...this.query, search: this.filters.search || undefined, state: this.filters.state || undefined });
         },
 
         updateQuery(partial) {
@@ -173,12 +167,12 @@ export default {
             this.confirm.loading = true;
 
             try {
-                const result = await this.store.delete(this.confirm.item.id);
-                this.feedback.success(result?.message || 'Endereco excluido com sucesso.');
+                const result = await this.$store.dispatch('addresses/delete', this.confirm.item.id);
+                this.$store.dispatch('feedback/success', result?.message || 'Endereco excluido com sucesso.');
                 this.confirm.open = false;
                 this.fetch();
             } catch (error) {
-                this.feedback.error(error.response?.data?.message || 'Nao foi possivel excluir o endereco.');
+                this.$store.dispatch('feedback/error', error.response?.data?.message || 'Nao foi possivel excluir o endereco.');
             } finally {
                 this.confirm.loading = false;
             }

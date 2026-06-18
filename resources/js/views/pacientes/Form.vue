@@ -80,9 +80,6 @@
 
 <script>
 import BaseInput from '../../components/BaseInput.vue';
-import { useAddressesStore } from '../../store/addresses';
-import { usePatientsStore } from '../../store/patients';
-import { useFeedbackStore } from '../../store/feedback';
 
 export default {
     name: 'PatientForm',
@@ -117,16 +114,8 @@ export default {
     },
 
     computed: {
-        store() {
-            return usePatientsStore();
-        },
-
         addresses() {
-            return useAddressesStore();
-        },
-
-        feedback() {
-            return useFeedbackStore();
+            return this.$store.state.addresses;
         },
 
         isEditing() {
@@ -146,7 +135,7 @@ export default {
     },
 
     async created() {
-        await this.addresses.fetch({ page: 1, per_page: 20, sort_by: 'city', sort_dir: 'asc' });
+        await this.$store.dispatch('addresses/fetch', { page: 1, per_page: 20, sort_by: 'city', sort_dir: 'asc' });
 
         if (this.isEditing) {
             await this.load();
@@ -161,7 +150,7 @@ export default {
             if (this.form.address_id) return;
 
             this.addressSearchTimer = setTimeout(() => {
-                this.addresses.fetch({
+                this.$store.dispatch('addresses/fetch', {
                     page: 1,
                     per_page: 20,
                     sort_by: 'city',
@@ -174,7 +163,7 @@ export default {
 
     methods: {
         async load() {
-            const patient = await this.store.fetchOne(this.id);
+            const patient = await this.$store.dispatch('patients/fetchOne', this.id);
             this.form = {
                 name: patient.name || '',
                 cpf: patient.cpf || '',
@@ -186,7 +175,7 @@ export default {
             };
 
             if (patient.address && !this.addresses.items.some((item) => item.id === patient.address.id)) {
-                this.addresses.items = [patient.address, ...this.addresses.items];
+                this.$store.commit('addresses/SET_ITEMS', [patient.address, ...this.addresses.items]);
             }
         },
 
@@ -198,12 +187,12 @@ export default {
             this.error = null;
 
             try {
-                const result = await this.store.save({ ...this.form, phone: this.form.phone || null }, this.id);
-                this.feedback.success(result?.message || (this.isEditing ? 'Paciente atualizado com sucesso.' : 'Paciente cadastrado com sucesso.'));
+                const result = await this.$store.dispatch('patients/save', { payload: { ...this.form, phone: this.form.phone || null }, id: this.id });
+                this.$store.dispatch('feedback/success', result?.message || (this.isEditing ? 'Paciente atualizado com sucesso.' : 'Paciente cadastrado com sucesso.'));
                 this.$router.push({ name: 'pacientes.index' });
             } catch (error) {
                 this.error = error.response?.data?.message || 'Nao foi possivel salvar o paciente.';
-                this.feedback.error(this.error);
+                this.$store.dispatch('feedback/error', this.error);
             } finally {
                 this.loading = false;
             }

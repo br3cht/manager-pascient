@@ -19,14 +19,12 @@
 </template>
 
 <script>
-import { useDashboardStore } from '../store/dashboard';
-
 export default {
     name: 'Dashboard',
 
     computed: {
         dashboard() {
-            return useDashboardStore();
+            return this.$store.state.dashboard;
         },
 
         cards() {
@@ -38,7 +36,7 @@ export default {
     },
 
     created() {
-        this.dashboard.fetchTotals();
+        this.$store.dispatch('dashboard/fetchTotals');
     },
 };
 </script>

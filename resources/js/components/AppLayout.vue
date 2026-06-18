@@ -38,19 +38,18 @@
             :timeout="feedback.timeout"
             top
             right
-            @input="feedback.close()"
+            @input="closeFeedback()"
         >
             {{ feedback.message }}
             <template #action="{ attrs }">
-                <v-btn text v-bind="attrs" @click="feedback.close()">Fechar</v-btn>
+                <v-btn text v-bind="attrs" @click="closeFeedback()">Fechar</v-btn>
             </template>
         </v-snackbar>
     </v-main>
 </template>
 
 <script>
-import { useAuthStore } from '../store/auth';
-import { useFeedbackStore } from '../store/feedback';
+import { mapState, mapActions } from 'vuex';
 
 export default {
     name: 'AppLayout',
@@ -67,12 +66,15 @@ export default {
     },
 
     computed: {
+        ...mapState('auth', { authLoading: 'loading' }),
+        ...mapState('feedback', ['open', 'message', 'color', 'timeout']),
+
         auth() {
-            return useAuthStore();
+            return this.$store.state.auth;
         },
 
         feedback() {
-            return useFeedbackStore();
+            return this.$store.state.feedback;
         },
 
         pageTitle() {
@@ -91,8 +93,10 @@ export default {
     },
 
     methods: {
+        ...mapActions('feedback', { closeFeedback: 'close' }),
+
         async logout() {
-            await this.auth.logout();
+            await this.$store.dispatch('auth/logout');
             this.$router.push({ name: 'login' });
         },
     },

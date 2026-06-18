@@ -77,8 +77,6 @@
 import BaseTable from '../../components/BaseTable.vue';
 import Pagination from '../../components/Pagination.vue';
 import ConfirmModal from '../../components/ConfirmModal.vue';
-import { usePatientsStore } from '../../store/patients';
-import { useFeedbackStore } from '../../store/feedback';
 
 export default {
     name: 'PatientIndex',
@@ -122,11 +120,7 @@ export default {
 
     computed: {
         store() {
-            return usePatientsStore();
-        },
-
-        feedback() {
-            return useFeedbackStore();
+            return this.$store.state.patients;
         },
     },
 
@@ -163,7 +157,7 @@ export default {
         },
 
         fetch() {
-            this.store.fetch({ ...this.query, search: this.filters.search || undefined, gender: this.filters.gender || undefined });
+            this.$store.dispatch('patients/fetch', { ...this.query, search: this.filters.search || undefined, gender: this.filters.gender || undefined });
         },
 
         updateQuery(partial) {
@@ -195,12 +189,12 @@ export default {
             this.confirm.loading = true;
 
             try {
-                const result = await this.store.delete(this.confirm.item.id);
-                this.feedback.success(result?.message || 'Paciente excluido com sucesso.');
+                const result = await this.$store.dispatch('patients/delete', this.confirm.item.id);
+                this.$store.dispatch('feedback/success', result?.message || 'Paciente excluido com sucesso.');
                 this.confirm.open = false;
                 this.fetch();
             } catch (error) {
-                this.feedback.error(error.response?.data?.message || 'Nao foi possivel excluir o paciente.');
+                this.$store.dispatch('feedback/error', error.response?.data?.message || 'Nao foi possivel excluir o paciente.');
             } finally {
                 this.confirm.loading = false;
             }

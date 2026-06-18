@@ -63,8 +63,6 @@
 <script>
 import axios from 'axios';
 import BaseInput from '../../components/BaseInput.vue';
-import { useAddressesStore } from '../../store/addresses';
-import { useFeedbackStore } from '../../store/feedback';
 import { BRAZILIAN_STATES } from '../../constants/states';
 
 export default {
@@ -93,14 +91,6 @@ export default {
     },
 
     computed: {
-        store() {
-            return useAddressesStore();
-        },
-
-        feedback() {
-            return useFeedbackStore();
-        },
-
         isEditing() {
             return Boolean(this.id);
         },
@@ -118,7 +108,7 @@ export default {
 
     methods: {
         async load() {
-            const address = await this.store.fetchOne(this.id);
+            const address = await this.$store.dispatch('addresses/fetchOne', this.id);
             this.form = {
                 zip_code: address.zip_code || '',
                 street: address.street || '',
@@ -154,12 +144,12 @@ export default {
             this.error = null;
 
             try {
-                const result = await this.store.save({ ...this.form, state: this.form.state.toUpperCase() }, this.id);
-                this.feedback.success(result?.message || (this.isEditing ? 'Endereco atualizado com sucesso.' : 'Endereco cadastrado com sucesso.'));
+                const result = await this.$store.dispatch('addresses/save', { payload: { ...this.form, state: this.form.state.toUpperCase() }, id: this.id });
+                this.$store.dispatch('feedback/success', result?.message || (this.isEditing ? 'Endereco atualizado com sucesso.' : 'Endereco cadastrado com sucesso.'));
                 this.$router.push({ name: 'enderecos.index' });
             } catch (error) {
                 this.error = error.response?.data?.message || 'Nao foi possivel salvar o endereco.';
-                this.feedback.error(this.error);
+                this.$store.dispatch('feedback/error', this.error);
             } finally {
                 this.loading = false;
             }

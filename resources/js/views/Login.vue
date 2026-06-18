@@ -38,7 +38,6 @@
 
 <script>
 import BaseInput from '../components/BaseInput.vue';
-import { useAuthStore } from '../store/auth';
 
 export default {
     name: 'Login',
@@ -56,7 +55,7 @@ export default {
 
     computed: {
         auth() {
-            return useAuthStore();
+            return this.$store.state.auth;
         },
     },
 
@@ -65,7 +64,7 @@ export default {
             const valid = await this.$refs.observer.validate();
             if (!valid) return;
 
-            await this.auth.login(this.form);
+            await this.$store.dispatch('auth/login', this.form);
             this.$router.push(this.$route.query.redirect || { name: 'dashboard' });
         },
     },

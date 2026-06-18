@@ -6,7 +6,7 @@
         "build": "vite build",
         "build:standalone": "BUILD_MODE=standalone vite build",
         "dev": "vite",
-        "postinstall": "node -e \"try{require('./node_modules/pinia/node_modules/vue-demi/scripts/postinstall.js')}catch(e){console.warn('[postinstall] vue-demi switch skipped:', e.message)}\""
+        "postinstall": ""
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
@@ -19,10 +19,10 @@
     "dependencies": {
         "@mdi/font": "^7.4.47",
         "axios": "^1.18.0",
-        "pinia": "^2.1.7",
         "vee-validate": "^3.4.15",
         "vue": "^2.7.16",
         "vue-router": "^3.6.5",
-        "vuetify": "^2.7.2"
+        "vuetify": "^2.7.2",
+        "vuex": "^3.6.2"
     }
 }
