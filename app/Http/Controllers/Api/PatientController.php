@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
 
 use App\DTO\Patient\PatientIndexInput;
 use App\DTO\Patient\PatientInput;
-use App\Http\Requests\Patient\PatientIndexRequest;
-use App\Http\Requests\Patient\PatientStoreRequest;
-use App\Http\Requests\Patient\PatientUpdateRequest;
+use App\Http\Requests\IndexPatientRequest;
+use App\Http\Requests\StorePatientRequest;
+use App\Http\Requests\UpdatePatientRequest;
 use App\Http\Resources\PatientResource;
 use App\Models\Patient;
 use App\Services\PatientService;
@@ -17,7 +19,7 @@ class PatientController extends Controller
         public readonly PatientService $patientService
     ) {}
 
-    public function index(PatientIndexRequest $request)
+    public function index(IndexPatientRequest $request)
     {
         $dataRequest = $request->validated();
         $input = PatientIndexInput::fromArray($dataRequest);
@@ -27,7 +29,7 @@ class PatientController extends Controller
         );
     }
 
-    public function store(PatientStoreRequest $request)
+    public function store(StorePatientRequest $request)
     {
         $dataRequest = $request->validated();
         $input = PatientInput::fromArray($dataRequest);
@@ -42,7 +44,7 @@ class PatientController extends Controller
         return new PatientResource($patient->load('address'));
     }
 
-    public function update(PatientUpdateRequest $request, Patient $patient)
+    public function update(UpdatePatientRequest $request, Patient $patient)
     {
         $dataRequest = $request->validated();
         $input = PatientInput::fromArray($dataRequest);

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Address;
+namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\HasPortugueseValidationMessages;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddressUpdateRequest extends FormRequest
+class IndexAddressRequest extends FormRequest
 {
     use HasPortugueseValidationMessages;
 
@@ -26,11 +26,12 @@ class AddressUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'street' => 'required|string',
-            'zip_code' => 'required|digits:8',
-            'neighborhood' => 'required|string',
-            'city' => 'required|string',
-            'state' => 'required|string|max:2',
+            'page' => 'required|integer',
+            'per_page' => 'required|integer',
+            'search' => 'nullable|string',
+            'sort_by' => 'nullable|string|in:id,street,zip_code,neighborhood,city,state,created_at,updated_at',
+            'sort_dir' => 'nullable|string|in:asc,desc',
+            'state' => 'nullable|string|max:2',
         ];
     }
 
@@ -42,10 +43,11 @@ class AddressUpdateRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'street' => 'logradouro',
-            'zip_code' => 'CEP',
-            'neighborhood' => 'bairro',
-            'city' => 'cidade',
+            'page' => 'página',
+            'per_page' => 'itens por página',
+            'search' => 'busca',
+            'sort_by' => 'campo de ordenação',
+            'sort_dir' => 'direção da ordenação',
             'state' => 'estado',
         ];
     }

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Patient;
+namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\HasPortugueseValidationMessages;
 use App\Rules\Cpf;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PatientUpdateRequest extends FormRequest
+class UpdatePatientRequest extends FormRequest
 {
     use HasPortugueseValidationMessages {
         messages as portugueseValidationMessages;

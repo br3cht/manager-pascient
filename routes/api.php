@@ -1,15 +1,10 @@
 <?php
 
-use App\Http\Controllers\AddressController;
+use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PatientController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\PatientController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware([

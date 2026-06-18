@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Patient;
+namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\HasPortugueseValidationMessages;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PatientIndexRequest extends FormRequest
+class UpdateAddressRequest extends FormRequest
 {
     use HasPortugueseValidationMessages;
 
@@ -26,12 +26,11 @@ class PatientIndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page' => 'required|integer',
-            'per_page' => 'required|integer',
-            'search' => 'nullable|string',
-            'sort_by' => 'nullable|string|in:id,name,cpf,cns,birth_date,gender,phone,address_id,created_at,updated_at',
-            'sort_dir' => 'nullable|string|in:asc,desc',
-            'gender' => 'nullable|string|in:M,F,O',
+            'street' => 'required|string',
+            'zip_code' => 'required|digits:8',
+            'neighborhood' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string|max:2',
         ];
     }
 
@@ -43,12 +42,11 @@ class PatientIndexRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'page' => 'página',
-            'per_page' => 'itens por página',
-            'search' => 'busca',
-            'sort_by' => 'campo de ordenação',
-            'sort_dir' => 'direção da ordenação',
-            'gender' => 'gênero',
+            'street' => 'logradouro',
+            'zip_code' => 'CEP',
+            'neighborhood' => 'bairro',
+            'city' => 'cidade',
+            'state' => 'estado',
         ];
     }
 }
