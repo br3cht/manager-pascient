@@ -37,6 +37,11 @@ class PatientController extends Controller
         return response()->json(data: ['message' => 'Paciente cadastrado com sucesso']);
     }
 
+    public function show(Patient $patient)
+    {
+        return new PatientResource($patient->load('address'));
+    }
+
     public function update(PatientUpdateRequest $request, Patient $patient)
     {
         $dataRequest = $request->validated();

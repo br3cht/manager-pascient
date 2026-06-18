@@ -36,6 +36,11 @@ class AddressController extends Controller
         return response()->json(data: ['message' => 'Endereco cadastrado com sucesso']);
     }
 
+    public function show(Address $address)
+    {
+        return new AddressResource($address);
+    }
+
     public function update(AddressUpdateRequest $request, Address $address)
     {
         $dataRequest = $request->validated();
