@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "postinstall": "node -e \"try{require('./node_modules/pinia/node_modules/vue-demi/scripts/postinstall.js')}catch(e){console.warn('[postinstall] vue-demi switch skipped:', e.message)}\""
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
