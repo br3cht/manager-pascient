@@ -60,6 +60,60 @@ class PatientsSeeder extends Seeder
                 'gender' => 'M',
                 'address_id' => $addressIds->random(),
             ],
+
+            [
+                'name' => 'Ana Paula Ferreira',
+                'cpf' =>  '11122233344',
+                'cns' => '111222333444555',
+                'birth_date' => Carbon::parse('1995-05-20')->format('Y-m-d'),
+                'gender' => 'F',
+                'address_id' => $addressIds->random(),
+            ],
+
+            [
+                'name' => 'Pedro Henrique Santos',
+                'cpf' =>  '55566677788',
+                'cns' => '555666777888999',
+                'birth_date' => Carbon::parse('1980-09-12')->format('Y-m-d'),
+                'gender' => 'M',
+                'address_id' => $addressIds->random(),
+            ],
+
+            [
+                'name' => 'Fernanda Lima Costa',
+                'cpf' =>  '99988877766',
+                'cns' => '999888777666555',
+                'birth_date' => Carbon::parse('2000-02-14')->format('Y-m-d'),
+                'gender' => 'F',
+                'address_id' => $addressIds->random(),
+            ],
+
+            [
+                'name' => 'Roberto Alves Pereira',
+                'cpf' =>  '22233344455',
+                'cns' => '222333444555666',
+                'birth_date' => Carbon::parse('1958-12-03')->format('Y-m-d'),
+                'gender' => 'M',
+                'address_id' => $addressIds->random(),
+            ],
+
+            [
+                'name' => 'Juliana Rocha Martins',
+                'cpf' =>  '66677788899',
+                'cns' => '666777888999000',
+                'birth_date' => Carbon::parse('1992-06-28')->format('Y-m-d'),
+                'gender' => 'F',
+                'address_id' => $addressIds->random(),
+            ],
+
+            [
+                'name' => 'Lucas Barbosa Neto',
+                'cpf' =>  '33344455566',
+                'cns' => '333444555666777',
+                'birth_date' => Carbon::parse('1975-04-17')->format('Y-m-d'),
+                'gender' => 'M',
+                'address_id' => $addressIds->random(),
+            ],
         ]);
     }
 }

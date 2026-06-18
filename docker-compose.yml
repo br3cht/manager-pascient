@@ -1,0 +1,32 @@
+services:
+    laravel:
+        build:
+            context: .
+            dockerfile: Dockerfiles/laravel/Dockerfile
+            args:
+                user: laravel
+                uid: 1000
+        container_name: conecta-sus-laravel
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - .:/var/www
+        networks:
+            - conecta-sus
+
+    frontend:
+        build:
+            context: .
+            dockerfile: Dockerfiles/frontend/Dockerfile
+        container_name: conecta-sus-frontend
+        restart: unless-stopped
+        ports:
+            - "3000:3000"
+        depends_on:
+            - laravel
+        networks:
+            - conecta-sus
+
+networks:
+    conecta-sus:
+        driver: bridge

@@ -47,6 +47,14 @@ class AddressSeeder extends Seeder
                 'neighborhood' => 'Centro',
                 'city' => 'Rio de Janeiro',
                 'state' => 'RJ',
+            ],
+
+            [
+                'street' => 'Rua da Aurora, 500',
+                'zip_code' =>  '50050901',
+                'neighborhood' => 'Boa Vista',
+                'city' => 'Recife',
+                'state' => 'PE',
             ]
         ]);
     }

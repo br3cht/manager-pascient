@@ -35,21 +35,6 @@ services:
     networks:
     - laravel
 
-  # queue:
-  #     container_name: queue-system-api
-  #     image: system-laravel-10
-  #     restart: unless-stopped
-  #     working_dir: /var/www/html/
-  #     command: ['sh', '-c', 'composer install && php artisan migrate && php artisan db:seed && npm run build && php artisan horizon']
-  #     mem_limit: 400M # It can be removed if there is no need memory limit
-  #     depends_on:
-  #       - app
-  #       - db
-  #     volumes:
-  #       - .:/var/www/html
-  #     networks:
-  #       - laravel
-
   db:
     image: mysql:8.0
     container_name: laravel-system-db
