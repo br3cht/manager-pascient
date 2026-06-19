@@ -1,58 +1,212 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Conecta SUS — Sistema de Cadastro de Pacientes
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema web de cadastro de pacientes para o setor de saúde. Backend em **Laravel** (API REST JSON) e frontend em **Vue.js 2** (SPA), integrados e containerizados com **Docker**.
 
-## About Laravel
+## Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Backend:** PHP 8.5 / Laravel 13 / MySQL 8
+- **Frontend:** Vue.js 2 / Vuex / Vuetify 2 / VeeValidate
+- **Infra:** Docker / Docker Compose / Nginx
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Pré-requisitos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Docker e Docker Compose instalados
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Como executar
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clonar o repositório
+git clone <url-do-repositorio>
+cd testDev
 
-php artisan boost:install
+# 2. Copiar variáveis de ambiente
+cp .env.example .env
+
+# 3. Subir os containers
+docker compose up -d --build
+
+# 4. Instalar dependências PHP
+docker compose exec app composer install
+
+# 5. Gerar chave da aplicação
+docker compose exec app php artisan key:generate
+
+# 6. Rodar migrations e seeders
+docker compose exec app php artisan migrate --seed
+
+# 7. Build do frontend
+docker compose exec frontend npm run build:standalone
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Acesso
 
-## Contributing
+| Serviço  | URL                       |
+|----------|---------------------------|
+| Aplicação | http://localhost:8080     |
+| MySQL    | localhost:3306             |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Credenciais padrão (seed)
 
-## Code of Conduct
+| Campo | Valor              |
+|-------|--------------------|
+| Email | test@example.com   |
+| Senha | password           |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Comandos úteis
 
-## Security Vulnerabilities
+```bash
+# Iniciar containers
+docker compose up -d --build
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Migrations + seed
+docker compose exec app php artisan migrate --seed
 
-## License
+# Rodar testes
+docker compose exec app php artisan test
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Instalar dependências PHP
+docker compose exec app composer install
+
+# Build do frontend
+docker compose exec frontend npm run build:standalone
+```
+
+## Estrutura do projeto
+
+### Backend (Laravel)
+
+```
+app/
+  Http/
+    Controllers/Api/
+      AddressController.php
+      PatientController.php
+      DashboardController.php
+    Requests/
+      StoreAddressRequest.php
+      UpdateAddressRequest.php
+      StorePatientRequest.php
+      UpdatePatientRequest.php
+  Models/
+    Address.php
+    Patient.php
+  Repositories/
+    AddressRepository.php
+    PatientRepository.php
+  Services/
+    AddressService.php
+    PatientService.php
+    DashboardService.php
+database/
+  migrations/
+  seeders/
+  factories/
+routes/
+  api.php
+```
+
+### Frontend (Vue.js 2)
+
+```
+resources/js/
+  components/
+    AppLayout.vue
+    BaseInput.vue
+    BaseTable.vue
+    ConfirmModal.vue
+    Pagination.vue
+  views/
+    Dashboard.vue
+    Login.vue
+    enderecos/  Index.vue · Form.vue
+    pacientes/  Index.vue · Form.vue
+  store/
+    index.js
+    modules/
+      addresses.js
+      patients.js
+      auth.js
+      dashboard.js
+      feedback.js
+  services/
+    api.js
+    address.service.js
+    patient.service.js
+    auth.service.js
+    dashboard.service.js
+  router/
+    index.js
+```
+
+## API REST — Endpoints
+
+Todos os endpoints requerem autenticação via Sanctum (Bearer Token), exceto login.
+
+### Autenticação
+
+| Método | Rota          | Descrição       |
+|--------|---------------|-----------------|
+| POST   | /api/login    | Autenticar      |
+| POST   | /api/logout   | Desconectar     |
+
+### Endereços
+
+| Método | Rota                 | Descrição              |
+|--------|----------------------|------------------------|
+| GET    | /api/addresses       | Listar (paginado)      |
+| POST   | /api/addresses       | Criar endereço         |
+| GET    | /api/addresses/{id}  | Detalhar               |
+| PUT    | /api/addresses/{id}  | Atualizar              |
+| DELETE | /api/addresses/{id}  | Excluir (ver RN-03)    |
+
+### Pacientes
+
+| Método | Rota                | Descrição             |
+|--------|---------------------|-----------------------|
+| GET    | /api/patients       | Listar (paginado)     |
+| POST   | /api/patients       | Criar paciente        |
+| GET    | /api/patients/{id}  | Detalhar              |
+| PUT    | /api/patients/{id}  | Atualizar             |
+| DELETE | /api/patients/{id}  | Excluir               |
+
+### Dashboard
+
+| Método | Rota            | Descrição                        |
+|--------|-----------------|----------------------------------|
+| GET    | /api/dashboard  | Totais de pacientes e endereços  |
+
+### Parâmetros de listagem
+
+| Parâmetro | Tipo        | Exemplo            |
+|-----------|-------------|---------------------|
+| page      | integer     | ?page=2             |
+| per_page  | integer     | ?per_page=20 (padrão: 15, máx: 100) |
+| search    | string      | ?search=João        |
+| sort_by   | string      | ?sort_by=name       |
+| sort_dir  | asc / desc  | ?sort_dir=desc      |
+| state     | UF (2 letras) | ?state=SP         |
+| gender    | M / F / O   | ?gender=F           |
+
+## Docker — Containers
+
+| Serviço   | Porta          | Notas                            |
+|-----------|----------------|----------------------------------|
+| app       | 9000 (interno) | PHP-FPM + Composer + Artisan     |
+| nginx     | 8080 → 80      | Proxy reverso para FPM           |
+| db        | 3306           | MySQL 8 com volume persistente   |
+| frontend  | —              | Node 20 — build da SPA Vue.js    |
+
+## Variáveis de ambiente
+
+| Variável       | Descrição                  |
+|----------------|----------------------------|
+| APP_KEY        | Chave da aplicação         |
+| APP_ENV        | Ambiente (local/production)|
+| APP_URL        | URL da aplicação           |
+| FRONTEND_URL   | URL do frontend (CORS)     |
+| DB_HOST        | Host do banco de dados     |
+| DB_PORT        | Porta do MySQL             |
+| DB_DATABASE    | Nome do banco              |
+| DB_USERNAME    | Usuário do banco           |
+| DB_PASSWORD    | Senha do banco             |
+| LOG_CHANNEL    | Canal de log (daily)       |
