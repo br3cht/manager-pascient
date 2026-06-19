@@ -7,4 +7,6 @@ RUN npm ci
 
 COPY . .
 
+USER 1000
+
 CMD ["sh", "-c", "npm run build:standalone"]

@@ -1,68 +1,72 @@
-volumes:
- db:
- cache:
-
 services:
-  nginx:
-    container_name: laravel-system-nginx
-    image: nginx:alpine
-    restart: unless-stopped
-    mem_limit: 200M # It can be removed if there is no need memory limit
-    ports:
-        - "8080:80"
-    volumes:
-        - ./:/var/www
-        - ./infra/http/default.d/:/etc/nginx/conf.d/
-    networks:
-    - laravel
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfiles/laravel/Dockerfile
+            args:
+                user: laravel
+                uid: 1000
+        container_name: conecta-sus-app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - .:/var/www
+        depends_on:
+            db:
+                condition: service_started
+            frontend:
+                condition: service_completed_successfully
+        env_file: .env
+        networks:
+            - conecta-sus
 
-  app:
-    container_name: laravel-system-api
-    build:
-        context: ./Dockerfiles/laravel/
-        dockerfile: Dockerfile
-        args:
-            user: ${DOCKER_USER_ID:-0}
-            uid: ${DOCKER_GROUP_ID:-0}
-    image: system-laravel-10
-    restart: unless-stopped
-    working_dir: /var/www
-    mem_limit: 400M # It can be removed if there is no need memory limit
-    depends_on:
-    - db
-    volumes:
-    - .:/var/www
-    networks:
-    - laravel
+    nginx:
+        image: nginx:alpine
+        container_name: conecta-sus-nginx
+        restart: unless-stopped
+        ports:
+            - "8080:80"
+        volumes:
+            - .:/var/www
+            - ./infra/http/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            app:
+                condition: service_started
+            frontend:
+                condition: service_completed_successfully
+        networks:
+            - conecta-sus
 
-  db:
-    image: mysql:8.0
-    container_name: laravel-system-db
-    restart: unless-stopped
-    mem_limit: 700M
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-    - db:/var/lib/mysql
-    networks:
-      - laravel
+    db:
+        image: mysql:8.0
+        container_name: conecta-sus-db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+            MYSQL_USER: ${DB_USERNAME:-test}
+            MYSQL_PASSWORD: ${DB_PASSWORD:-test}
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+        volumes:
+            - db_data:/var/lib/mysql
+        ports:
+            - "3306:3306"
+        networks:
+            - conecta-sus
 
+    frontend:
+        build:
+            context: .
+            dockerfile: Dockerfiles/frontend/Dockerfile
+        container_name: conecta-sus-frontend
+        volumes:
+            - .:/app
+        command: sh -c "npm install && npm run build:standalone"
+        networks:
+            - conecta-sus
 
-  cache:
-    container_name: laravel-system-redis
-    image: redis:latest
-    mem_limit: 400M # It can be removed if there is no need memory limit
-    restart: unless-stopped
-    ports:
-        - "${REDIS_PORT}:6379"
-    networks:
-        - laravel
+volumes:
+    db_data:
 
 networks:
-    laravel:
+    conecta-sus:
         driver: bridge
