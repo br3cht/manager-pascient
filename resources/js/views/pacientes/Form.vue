@@ -146,8 +146,12 @@ export default {
         addressSearch(value) {
             clearTimeout(this.addressSearchTimer);
 
-            if (!value || !value.trim()) return;
-            if (this.form.address_id) return;
+            if (value === null) return;
+
+            const selected = this.addressOptions.find((opt) => opt.label === value);
+            if (selected) return;
+
+            this.form.address_id = null;
 
             this.addressSearchTimer = setTimeout(() => {
                 this.$store.dispatch('addresses/fetch', {
@@ -155,7 +159,7 @@ export default {
                     per_page: 20,
                     sort_by: 'city',
                     sort_dir: 'asc',
-                    search: value.trim(),
+                    search: value.trim() || undefined,
                 });
             }, 400);
         },
