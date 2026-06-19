@@ -26,8 +26,8 @@ class IndexPatientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page' => 'required|integer',
-            'per_page' => 'required|integer',
+            'page' => 'nullable|integer|min:1',
+            'per_page' => 'nullable|integer|min:1|max:100',
             'search' => 'nullable|string',
             'sort_by' => 'nullable|string|in:id,name,cpf,cns,birth_date,gender,phone,address_id,created_at,updated_at',
             'sort_dir' => 'nullable|string|in:asc,desc',

@@ -20,7 +20,7 @@ class SeedersTest extends TestCase
         $this->seed(AddressSeeder::class);
         $this->seed(AddressSeeder::class);
 
-        $this->assertDatabaseCount('addresses', 4);
+        $this->assertDatabaseCount('addresses', 5);
         $this->assertDatabaseHas('addresses', [
             'street' => 'Av. Paulista, 1000',
             'zip_code' => '01310100',
@@ -35,8 +35,8 @@ class SeedersTest extends TestCase
         $this->seed(PatientsSeeder::class);
         $this->seed(PatientsSeeder::class);
 
-        $this->assertDatabaseCount('addresses', 4);
-        $this->assertDatabaseCount('patients', 4);
+        $this->assertDatabaseCount('addresses', 5);
+        $this->assertDatabaseCount('patients', 10);
         $this->assertDatabaseHas('patients', [
             'name' => 'João Carlos Oliveira',
             'cpf' => '98765432100',
@@ -59,7 +59,7 @@ class SeedersTest extends TestCase
             'email' => 'test@example.com',
         ]);
         $this->assertSame(1, User::count());
-        $this->assertSame(4, Address::count());
-        $this->assertSame(4, Patient::count());
+        $this->assertSame(5, Address::count());
+        $this->assertSame(10, Patient::count());
     }
 }

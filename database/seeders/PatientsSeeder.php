@@ -28,7 +28,7 @@ class PatientsSeeder extends Seeder
         Patient::insert([
             [
                 'name' => 'Maria da Silva',
-                'cpf' =>  '12345678901',
+                'cpf' =>  '12345678909',
                 'cns' => '123456789012345',
                 'birth_date' => Carbon::parse('1985-03-15'),
                 'gender' => 'F',
@@ -45,7 +45,7 @@ class PatientsSeeder extends Seeder
 
             [
                 'name' => 'Maria da Silva',
-                'cpf' =>  '45678912300',
+                'cpf' =>  '45678912364',
                 'cns' => '456789123004567',
                 'birth_date' => Carbon::parse('1990-11-08')->format('Y-m-d'),
                 'gender' => 'F',
@@ -54,7 +54,7 @@ class PatientsSeeder extends Seeder
 
             [
                 'name' => 'Carlos E. Mendes',
-                'cpf' =>  '32165498700',
+                'cpf' =>  '32165498791',
                 'cns' => '321654987003216',
                 'birth_date' => Carbon::parse('1968-01-30')->format('Y-m-d'),
                 'gender' => 'M',
@@ -63,7 +63,7 @@ class PatientsSeeder extends Seeder
 
             [
                 'name' => 'Ana Paula Ferreira',
-                'cpf' =>  '11122233344',
+                'cpf' =>  '11122233396',
                 'cns' => '111222333444555',
                 'birth_date' => Carbon::parse('1995-05-20')->format('Y-m-d'),
                 'gender' => 'F',
@@ -72,7 +72,7 @@ class PatientsSeeder extends Seeder
 
             [
                 'name' => 'Pedro Henrique Santos',
-                'cpf' =>  '55566677788',
+                'cpf' =>  '55566677720',
                 'cns' => '555666777888999',
                 'birth_date' => Carbon::parse('1980-09-12')->format('Y-m-d'),
                 'gender' => 'M',
@@ -81,7 +81,7 @@ class PatientsSeeder extends Seeder
 
             [
                 'name' => 'Fernanda Lima Costa',
-                'cpf' =>  '99988877766',
+                'cpf' =>  '99988877714',
                 'cns' => '999888777666555',
                 'birth_date' => Carbon::parse('2000-02-14')->format('Y-m-d'),
                 'gender' => 'F',
@@ -90,7 +90,7 @@ class PatientsSeeder extends Seeder
 
             [
                 'name' => 'Roberto Alves Pereira',
-                'cpf' =>  '22233344455',
+                'cpf' =>  '22233344405',
                 'cns' => '222333444555666',
                 'birth_date' => Carbon::parse('1958-12-03')->format('Y-m-d'),
                 'gender' => 'M',
@@ -99,7 +99,7 @@ class PatientsSeeder extends Seeder
 
             [
                 'name' => 'Juliana Rocha Martins',
-                'cpf' =>  '66677788899',
+                'cpf' =>  '66677788830',
                 'cns' => '666777888999000',
                 'birth_date' => Carbon::parse('1992-06-28')->format('Y-m-d'),
                 'gender' => 'F',
@@ -108,7 +108,7 @@ class PatientsSeeder extends Seeder
 
             [
                 'name' => 'Lucas Barbosa Neto',
-                'cpf' =>  '33344455566',
+                'cpf' =>  '33344455508',
                 'cns' => '333444555666777',
                 'birth_date' => Carbon::parse('1975-04-17')->format('Y-m-d'),
                 'gender' => 'M',

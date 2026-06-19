@@ -17,6 +17,7 @@ trait HasPortugueseValidationMessages
             'string' => 'O campo :attribute deve ser um texto.',
             'integer' => 'O campo :attribute deve ser um número inteiro.',
             'date' => 'O campo :attribute deve ser uma data válida.',
+            'before_or_equal' => 'O campo :attribute não pode ser uma data futura.',
             'digits' => 'O campo :attribute deve conter exatamente :digits dígitos.',
             'exists' => 'O campo :attribute selecionado é inválido.',
             'max' => 'O campo :attribute deve ter no máximo :max caracteres.',

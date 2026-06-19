@@ -32,7 +32,7 @@ class UpdatePatientRequest extends FormRequest
             'name' => 'required|string',
             'cpf' => ['required', 'digits:11', new Cpf],
             'cns' => 'required|digits:15',
-            'birth_date' => 'required|date',
+            'birth_date' => 'required|date|before_or_equal:today',
             'gender' => 'required|string|in:M,F,O',
             'phone' => 'nullable|digits:11',
             'address_id' => 'required|integer|exists:addresses,id',
