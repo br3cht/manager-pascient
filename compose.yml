@@ -4,8 +4,8 @@ services:
             context: .
             dockerfile: Dockerfiles/laravel/Dockerfile
             args:
-                user: laravel
-                uid: 1000
+                user: ${DOCKER_USER:-laravel}
+                uid: ${DOCKER_USER_ID:-1000}
         container_name: conecta-sus-app
         restart: unless-stopped
         working_dir: /var/www
@@ -13,7 +13,7 @@ services:
             - .:/var/www
         depends_on:
             db:
-                condition: service_started
+                condition: service_healthy
             frontend:
                 condition: service_completed_successfully
         env_file: .env
@@ -50,6 +50,12 @@ services:
             - db_data:/var/lib/mysql
         ports:
             - "3306:3306"
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
         networks:
             - conecta-sus
 
@@ -57,6 +63,8 @@ services:
         build:
             context: .
             dockerfile: Dockerfiles/frontend/Dockerfile
+            args:
+                uid: ${DOCKER_USER_ID:-1000}
         container_name: conecta-sus-frontend
         volumes:
             - .:/app

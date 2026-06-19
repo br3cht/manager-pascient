@@ -21,6 +21,8 @@ cd testDev
 
 # 2. Copiar variáveis de ambiente
 cp .env.example .env
+# Em host Linux, ajuste DOCKER_USER_ID no .env para o seu UID (rode `id -u`)
+# para evitar problemas de permissão nos arquivos montados via volume.
 
 # 3. Subir os containers
 docker compose up -d --build
@@ -49,8 +51,8 @@ docker compose exec frontend npm run build:standalone
 
 | Campo | Valor              |
 |-------|--------------------|
-| Email | test@example.com   |
-| Senha | password           |
+| Email | teste@conectasus.com.br |
+| Senha | password                |
 
 ## Comandos úteis
 

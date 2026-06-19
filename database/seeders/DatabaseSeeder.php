@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         if (User::count() == 0) {
             User::factory()->create([
                 'name' => 'Test User',
-                'email' => 'test@example.com',
+                'email' => 'teste@conectasus.com.br',
                 'password' => 'password'
             ]);
         }
