@@ -29,6 +29,18 @@ function onlyDigits(value) {
     return String(value || '').replace(/\D/g, '');
 }
 
+function maxDigits(pattern) {
+    if (!pattern) {
+        return Infinity;
+    }
+
+    let count = 0;
+    for (const char of pattern) {
+        if (char === '0') count += 1;
+    }
+    return count;
+}
+
 function applyMask(value, pattern) {
     if (!pattern) {
         return value;
@@ -74,7 +86,13 @@ export default {
 
     methods: {
         onInput(value) {
-            this.$emit('input', this.mask ? onlyDigits(value) : value);
+            if (!this.mask) {
+                this.$emit('input', value);
+                return;
+            }
+
+            const pattern = masks[this.mask] || this.mask;
+            this.$emit('input', onlyDigits(value).slice(0, maxDigits(pattern)));
         },
     },
 };
